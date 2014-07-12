@@ -35,6 +35,11 @@ applyConfig = (b, cfg) ->
 writeDeps = (callback) ->
   depsBundle.bundle debug: debug, (err, depsContent) ->
     return err if err
+
+    originalPrelude = fs.readFileSync "#{__dirname}/../../../node_modules/browserify/node_modules/browser-pack/_prelude.js"
+    debugPrelude = fs.readFileSync "#{__dirname}/../stubPrelude.js"
+    depsContent = depsContent.replace(originalPrelude, debugPrelude)
+
     fs.writeFile tmp, depsContent, (err) ->
       return err if err
       callback() if callback?
