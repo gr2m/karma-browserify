@@ -13,6 +13,7 @@
 
     var stubbedRequires = {};
     var moduleKeys = Object.keys(modules);
+    var regexFindInternalIdInFunction = /require\('([^']+)'\)/;
     global.stubRequire = function( path, stub, doRemove ) {
 
       for(var i = 0; i < moduleKeys.length; i++) {
@@ -21,7 +22,7 @@
         if (filePath.length === 6) continue;
 
         if (RegExp(path+'.js').test(filePath)) {
-          internalId = modules[moduleKeys[i]][0].toString().match(/require\('([^']+)'\)/).pop();
+          internalId = modules[moduleKeys[i]][0].toString().match(regexFindInternalIdInFunction).pop();
           if (doRemove) {
             delete stubbedRequires[internalId]
           } else {
